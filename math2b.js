@@ -7,7 +7,7 @@ const mult = (a, b) => a * b;
 const div = (a, b) => a / b;
 
 console.log("SUM string:", sum("1", "2"));
-console.log("SUM numeber:", sum(1, 2));
+console.log("SUM numeber:", sum(1, "2"));
 
 console.log("SUB string:", sub("1", "2"));
 console.log("SUB numeber:", sub(1, 2));

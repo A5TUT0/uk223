@@ -32,8 +32,6 @@ const Ferrari = new Auto(2, "Ferrari", 1910, 10);
 console.log(Ferrari.fahren());
 console.log(Ferrari.hupen());
 console.log(Ferrari.numberOfTuren());
-// c)  Die Eigenschaft muss im Konstruktor mit allen anderen Eigenschaften der Basisklasse mitgegeben werden. Weiter soll die Klasse eine Methode «Beladen» besitzen welche es erlaubt das Fahrzeug zu beladen. Die Maximale Zuglast darf aber nicht überschritten werden.
-
 class Lastwagen extends Fahrzeug {
   private maxWight: number;
 
@@ -58,3 +56,22 @@ const Ferrari2 = new Auto(2, "Ferrari", 1910, 10);
 const Lastwagen1 = new Lastwagen("SBB", 2000, 1000, 10000);
 
 console.log(Lastwagen1.beladen(10));
+
+class ElektroAuto extends Auto {
+  private batteryCapacity: number;
+
+  constructor(
+    turen: number,
+    marke: string,
+    baujahr: number,
+    tankfull: number,
+    batteryCapacity: number
+  ) {
+    super(turen, marke, baujahr, tankfull);
+    this.batteryCapacity = batteryCapacity;
+  }
+
+  checkBattery() {
+    return this.batteryCapacity;
+  }
+}

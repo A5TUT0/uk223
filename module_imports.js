@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var math = require("./math");
+var lodash_1 = require("lodash");
+console.log(math.sum(1, 2));
+console.log(math.sub(123, 321));
+console.log(math.div(10, 20));
+console.log(math.mult(10, 2));
+var test = lodash_1.default.chunk(["a", "b", "c", "d"], 3);
+console.log(test);

@@ -13,3 +13,5 @@ console.log("SUB numeber:", sub(1, 2));
 console.log("MULT numeber:", mult(1, 2));
 
 console.log("DIV numeber:", div(1, 2));
+
+export { sum, sub, mult, div };

@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MiniTwitter Task Checklist</title>
+    <style>
+      body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f9f9f9;
+      }
+      header {
+        background-color: #007bff;
+        color: white;
+        text-align: center;
+        padding: 20px 10px;
+      }
+      header h1 {
+        margin: 0;
+        font-size: 24px;
+      }
+      .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+      li {
+        margin: 10px 0;
+      }
+      .task-title {
+        cursor: pointer;
+        padding: 10px;
+        background: #f1f1f1;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .task-title:hover {
+        background: #e8e8e8;
+      }
+      .task-title h3 {
+        margin: 0;
+        font-size: 16px;
+      }
+      .priority {
+        font-size: 12px;
+        padding: 5px 10px;
+        border-radius: 5px;
+        color: white;
+      }
+      .high-priority {
+        background: #e74c3c;
+      }
+      .medium-priority {
+        background: #f39c12;
+      }
+      .low-priority {
+        background: #3498db;
+      }
+      .task-details {
+        display: none;
+        padding: 10px 20px;
+        border-left: 3px solid #007bff;
+        margin-top: 10px;
+        background: #fafafa;
+      }
+      .task-details ul {
+        margin-top: 10px;
+      }
+      .task-details li {
+        margin-bottom: 5px;
+      }
+      .checkbox {
+        margin-right: 10px;
+      }
+      .done .task-title {
+        background: #dff0d8;
+        border-color: #c3e6cb;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>MiniTwitter Task Checklist</h1>
+    </header>
+
+    <div class="container">
+      <ul id="task-list">
+        <li>
+          <div class="task-title">
+            <input type="checkbox" class="checkbox" />
+            <h3>Diseño del esquema de base de datos (ERM)</h3>
+            <span class="priority high-priority">Alta prioridad</span>
+          </div>
+          <div class="task-details">
+            <p>
+              Crea un modelo ER completo utilizando la notación de pata de
+              cuervo que refleje el esquema de la base de datos. Incluir:
+            </p>
+            <ul>
+              <li>
+                Entidades clave como Usuarios, Publicaciones, Comentarios y
+                Roles.
+              </li>
+              <li>
+                Relaciones entre estas entidades con cardinalidades claras.
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div class="task-title">
+            <input type="checkbox" class="checkbox" />
+            <h3>Diagrama UML de la lógica del backend</h3>
+            <span class="priority high-priority">Alta prioridad</span>
+          </div>
+          <div class="task-details">
+            <p>Elabora un diagrama UML que cubra:</p>
+            <ul>
+              <li>
+                Clases principales como Usuario, Publicación, Comentario y Rol.
+              </li>
+              <li>Sus métodos, atributos y relaciones.</li>
+              <li>Modificadores de acceso (private, protected, public).</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div class="task-title">
+            <input type="checkbox" class="checkbox" />
+            <h3>Registro e inicio de sesión</h3>
+            <span class="priority high-priority">Alta prioridad</span>
+          </div>
+          <div class="task-details">
+            <p>Desarrolla las funcionalidades para:</p>
+            <ul>
+              <li>Registro de usuarios con nombre de usuario y contraseña.</li>
+              <li>
+                Inicio de sesión seguro, validando credenciales en el backend.
+              </li>
+              <li>
+                Implementar cifrado seguro de contraseñas (por ejemplo, bcrypt).
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div class="task-title">
+            <input type="checkbox" class="checkbox" />
+            <h3>Gestión de publicaciones</h3>
+            <span class="priority high-priority">Alta prioridad</span>
+          </div>
+          <div class="task-details">
+            <p>Implementa las siguientes funcionalidades:</p>
+            <ul>
+              <li>
+                Crear publicaciones con texto limitado (similar a tweets).
+              </li>
+              <li>Editar publicaciones propias.</li>
+              <li>Eliminar publicaciones.</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div class="task-title">
+            <input type="checkbox" class="checkbox" />
+            <h3>Comentarios en publicaciones</h3>
+            <span class="priority medium-priority">Media prioridad</span>
+          </div>
+          <div class="task-details">
+            <p>Asegúrate de que los usuarios puedan:</p>
+            <ul>
+              <li>Agregar comentarios a publicaciones existentes.</li>
+              <li>Editar sus propios comentarios.</li>
+              <li>Eliminar comentarios propios.</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div class="task-title">
+            <input type="checkbox" class="checkbox" />
+            <h3>Gestión de roles</h3>
+            <span class="priority medium-priority">Media prioridad</span>
+          </div>
+          <div class="task-details">
+            <p>Implementa los siguientes roles y permisos:</p>
+            <ul>
+              <li>
+                <strong>Usuario:</strong> Crear, editar y eliminar sus propias
+                publicaciones y comentarios.
+              </li>
+              <li>
+                <strong>Moderador:</strong> Editar y eliminar cualquier
+                publicación o comentario.
+              </li>
+              <li>
+                <strong>Administrador:</strong> Gestión completa de usuarios,
+                publicaciones y comentarios (incluido bloquear usuarios).
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div class="task-title">
+            <input type="checkbox" class="checkbox" />
+            <h3>Funcionalidad de Me gusta / No me gusta</h3>
+            <span class="priority low-priority">Baja prioridad</span>
+          </div>
+          <div class="task-details">
+            <p>Permitir que los usuarios puedan:</p>
+            <ul>
+              <li>Valorar publicaciones con "Me gusta" o "No me gusta".</li>
+              <li>
+                Visualizar el conteo de estas interacciones en cada publicación.
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div class="task-title">
+            <input type="checkbox" class="checkbox" />
+            <h3>Pruebas y documentación</h3>
+            <span class="priority low-priority">Baja prioridad</span>
+          </div>
+          <div class="task-details">
+            <p>Incluye:</p>
+            <ul>
+              <li>
+                Definición de casos de prueba que cubran todas las
+                funcionalidades principales.
+              </li>
+              <li>Un informe detallado de los resultados de las pruebas.</li>
+              <li>
+                Documentación técnica sobre la arquitectura y el uso del
+                sistema.
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div class="task-title">
+            <input type="checkbox" class="checkbox" />
+            <h3>Frontend y diseño</h3>
+            <span class="priority low-priority">Baja prioridad</span>
+          </div>
+          <div class="task-details">
+            <p>Usa las mejores prácticas para el diseño:</p>
+            <ul>
+              <li>Crear una interfaz de usuario amigable y responsiva.</li>
+              <li>
+                Organizar el código del frontend en módulos y archivos
+                coherentes.
+              </li>
+              <li>
+                Utilizar frameworks CSS como Bootstrap o Tailwind si es
+                necesario.
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <script>
+      document.querySelectorAll('.task-title').forEach((task) => {
+        task.addEventListener('click', () => {
+          const details = task.nextElementSibling;
+          details.style.display =
+            details.style.display === 'block' ? 'none' : 'block';
+        });
+      });
+
+      const checkboxes = document.querySelectorAll('.checkbox');
+      const savedProgress =
+        JSON.parse(localStorage.getItem('taskProgress')) || {};
+
+      checkboxes.forEach((checkbox, index) => {
+        if (savedProgress[index]) {
+          checkbox.checked = true;
+          checkbox.closest('li').classList.add('done');
+        }
+        checkbox.addEventListener('change', () => {
+          const parent = checkbox.closest('li');
+          if (checkbox.checked) {
+            parent.classList.add('done');
+            savedProgress[index] = true;
+          } else {
+            parent.classList.remove('done');
+            delete savedProgress[index];
+          }
+          localStorage.setItem('taskProgress', JSON.stringify(savedProgress));
+        });
+      });
+    </script>
+  </body>
+</html>

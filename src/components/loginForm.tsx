@@ -1,33 +1,95 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import axios from 'axios';
+import Alert from './errorAlert';
+const API_URL = 'http://localhost:3000';
 
 const LoginForm = () => {
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+  });
+  const [message, setMessage] = useState({ type: '', text: '' });
+  const navigate = useNavigate();
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`${API_URL}/login`, formData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      setMessage({ type: 'success', text: 'Login successful!' });
+
+      localStorage.setItem('token', response.data.token);
+      setTimeout(() => {
+        navigate('/');
+      },);
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'An unexpected error occurred.';
+      setMessage({ type: 'error', text: errorMessage });
+    }
+  };
+
+  const handleCloseMessage = () => {
+    setMessage({ type: '', text: '' });
+  };
+
   return (
     <StyledWrapper>
       <div className="login-box">
         <p>Login</p>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="user-box">
-            <input required name="" type="text" />
+            <input
+              required
+              name="username"
+              type="text"
+              value={formData.username}
+              onChange={handleInputChange}
+            />
             <label>Username</label>
           </div>
           <div className="user-box">
-            <input required name="" type="password" />
+            <input
+              required
+              name="password"
+              type="password"
+              value={formData.password}
+              onChange={handleInputChange}
+            />
             <label>Password</label>
           </div>
-          <a href="#">
-            <span />
-            <span />
-            <span />
-            <span />
-            Submit
-          </a>
+          {message.text && (
+            <Alert message={message.text} onClose={handleCloseMessage} />
+          )}
+          <button type="submit" className="submit-button">
+            <a >
+              <span />
+              <span />
+              <span />
+              <span />
+              Submit
+            </a>
+          </button>
         </form>
-        <p>Don't have an account? <a href="/register" className="a2">Sign up!</a></p>
+        <p>
+          Don't have an account? <a href="/register" className="a2">Sign up!</a>
+        </p>
       </div>
     </StyledWrapper>
   );
-}
-
+};
 const StyledWrapper = styled.div`
   .login-box {
     position: absolute;

@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 //import dotenv from 'dotenv';
 // dotenv.config();
-
+import Alert from './errorAlert';
 
 const API_URL = 'http://localhost:3000';
 
@@ -15,8 +17,8 @@ const RegisterForm = () => {
     email: '',
     password: '',
   });
-  const [message, setMessage] = useState('');
-
+  const [message, setMessage] = useState({ type: '', text: '' });
+  const navigate = useNavigate();
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({
@@ -33,14 +35,17 @@ const RegisterForm = () => {
           'Content-Type': 'application/json',
         },
       });
-      setMessage(`${response.data.token}`);
+      setMessage({ type: 'success', text: 'Registration successful!' });
+      navigate('/');
+      // Redirige después de 2 segundos (opcional)
     } catch (error: any) {
-      setMessage(
-        error.response?.data?.error
-      );
+      const errorMessage = error.response?.data?.message || 'An unexpected error occurred.';
+      setMessage({ type: 'error', text: errorMessage });
     }
   };
-
+  const handleCloseMessage = () => {
+    setMessage({ type: '', text: '' });
+  };
   return (
     <StyledWrapper>
       <div className="login-box">
@@ -76,6 +81,9 @@ const RegisterForm = () => {
             />
             <label>Password</label>
           </div>
+          {message.text && (
+            <Alert message={message.text} onClose={handleCloseMessage} />
+          )}
           <button type="submit" className="submit-button">
             <a >
 
@@ -87,7 +95,6 @@ const RegisterForm = () => {
             </a>
           </button>
         </form>
-        <p>{message}</p>
         <p>
           Already have an account? <a href="/login" className="a2">Login!</a>
         </p>

@@ -1,31 +1,93 @@
+import { useState } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
+//import dotenv from 'dotenv';
+// dotenv.config();
+
+
+const API_URL = 'http://localhost:3000';
+
+
 
 const RegisterForm = () => {
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+  });
+  const [message, setMessage] = useState('');
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`${API_URL}/register`, formData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      setMessage(`${response.data.token}`);
+    } catch (error: any) {
+      setMessage(
+        error.response?.data?.error
+      );
+    }
+  };
+
   return (
     <StyledWrapper>
       <div className="login-box">
         <p>Register</p>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="user-box">
-            <input required name="" type="text" />
+            <input
+              required
+              name="username"
+              type="text"
+              value={formData.username}
+              onChange={handleInputChange}
+            />
             <label>Username</label>
           </div>
           <div className="user-box">
-            <input required name="" type="email" />
+            <input
+              required
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleInputChange}
+            />
             <label>Email</label>
           </div>
           <div className="user-box">
-            <input required name="" type="password" />
+            <input
+              required
+              name="password"
+              type="password"
+              value={formData.password}
+              onChange={handleInputChange}
+            />
             <label>Password</label>
           </div>
-          <a href="#">
-            <span />
-            <span />
-            <span />
-            <span />
-            Submit
-          </a>
+          <button type="submit" className="submit-button">
+            <a >
+
+              <span />
+              <span />
+              <span />
+              <span />
+              Submit
+            </a>
+          </button>
         </form>
+        <p>{message}</p>
         <p>
           Already have an account? <a href="/login" className="a2">Login!</a>
         </p>

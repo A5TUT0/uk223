@@ -48,14 +48,15 @@ export class UserController {
       if (!username || !email || !password) {
         return res.status(400).json({ error: 'All fields are required' });
       }
+      console.log(req.body);
       const checkQuery =
         'SELECT 1 FROM Users WHERE email = ? OR username = ? LIMIT 1;';
       const existingUser = await this.db.executeSQL(checkQuery, [
         email,
         username,
       ]);
-
-      if (existingUser) {
+      console.log('Result from SELECT query:', existingUser);
+      if (Array.isArray(existingUser) && existingUser.length > 0) {
         return res
           .status(409)
           .json({ error: 'Username or email already exists' });
@@ -72,7 +73,7 @@ export class UserController {
       return res
         .status(201)
         .json({ message: 'User registered successfully', token });
-    } catch {
+    } catch (error) {
       return res.status(500).json({ error: 'Internal server error' });
     }
   };

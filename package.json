@@ -8,10 +8,15 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "start:backend": "bun run server/index.ts --inspect",
+    "start:frontend": "vite --port 3001",
+    "start:dev": "concurrently \"bun run start:backend\" \"bun run start:frontend\""
   },
   "dependencies": {
+    "axios": "^1.7.8",
     "bcrypt": "^5.1.1",
+    "concurrently": "^9.1.0",
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",

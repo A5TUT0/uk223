@@ -1,5 +1,6 @@
 import express, { Express } from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import { Database, UserController, API } from './class';
 dotenv.config();
 
@@ -13,14 +14,14 @@ class Backend {
     this.app = express();
     this.database = new Database();
     this.userController = new UserController(this.database);
-    this.api = new API(this.app, this.userController);
-
     this.setupMiddleware();
+    this.api = new API(this.app, this.userController);
     this.startServer();
   }
 
   private setupMiddleware() {
     this.app.use(express.json());
+    this.app.use(cors());
   }
 
   private startServer() {

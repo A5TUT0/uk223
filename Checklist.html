@@ -4,267 +4,269 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MiniTwitter Task Checklist</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
+      :root {
+        --bg-color: #121212;
+        --card-bg: #1e1e1e;
+        --text-color: #e0e0e0;
+        --header-bg: #202020;
+        --primary: #4caf50;
+        --secondary: #03a9f4;
+        --priority-high: #e53935;
+        --priority-medium: #fb8c00;
+        --priority-low: #43a047;
+        --done-bg: #2e7d32;
+        --done-text: #a5d6a7;
+        --border-radius: 8px;
+        --transition: all 0.3s ease-in-out;
+      }
+
       body {
-        font-family: 'Arial', sans-serif;
+        font-family: 'Roboto', sans-serif;
         margin: 0;
         padding: 0;
-        background-color: #f9f9f9;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        transition: var(--transition);
       }
+
       header {
-        background-color: #007bff;
-        color: white;
+        background-color: var(--header-bg);
+        color: var(--text-color);
         text-align: center;
-        padding: 20px 10px;
+        padding: 20px;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5);
       }
+
       header h1 {
         margin: 0;
-        font-size: 24px;
+        font-size: 28px;
+        font-weight: 700;
       }
+
       .container {
-        max-width: 800px;
+        max-width: 900px;
         margin: 20px auto;
         padding: 20px;
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        background: var(--card-bg);
+        border-radius: var(--border-radius);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
       }
+
       ul {
         list-style: none;
         padding: 0;
       }
+
       li {
         margin: 10px 0;
+        transition: var(--transition);
       }
+
       .task-title {
         cursor: pointer;
-        padding: 10px;
-        background: #f1f1f1;
-        border: 1px solid #ddd;
-        border-radius: 5px;
+        padding: 15px;
+        background: #2a2a2a;
+        border: 1px solid #444;
+        border-radius: var(--border-radius);
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 10px;
+        transition: var(--transition);
       }
+
       .task-title:hover {
-        background: #e8e8e8;
+        background: #333;
+        transform: scale(1.02);
       }
+
       .task-title h3 {
         margin: 0;
-        font-size: 16px;
+        font-size: 18px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
       }
+
       .priority {
         font-size: 12px;
         padding: 5px 10px;
-        border-radius: 5px;
+        border-radius: var(--border-radius);
         color: white;
+        font-weight: bold;
       }
-      .high-priority {
-        background: #e74c3c;
+
+      .priority-high {
+        background: var(--priority-high);
       }
-      .medium-priority {
-        background: #f39c12;
+
+      .priority-medium {
+        background: var(--priority-medium);
       }
-      .low-priority {
-        background: #3498db;
+
+      .priority-low {
+        background: var(--priority-low);
       }
+
       .task-details {
         display: none;
-        padding: 10px 20px;
-        border-left: 3px solid #007bff;
+        padding: 15px 20px;
         margin-top: 10px;
-        background: #fafafa;
+        background: #2a2a2a;
+        border-left: 4px solid var(--primary);
+        border-radius: var(--border-radius);
+        animation: slideDown 0.5s ease-out;
       }
+
       .task-details ul {
         margin-top: 10px;
+        padding-left: 20px;
       }
+
       .task-details li {
         margin-bottom: 5px;
       }
+
       .checkbox {
         margin-right: 10px;
       }
+
       .done .task-title {
-        background: #dff0d8;
-        border-color: #c3e6cb;
+        background: var(--done-bg);
+        border-color: var(--done-bg);
+        text-decoration: line-through;
+        color: var(--done-text);
+      }
+
+      @keyframes slideDown {
+        from {
+          max-height: 0;
+          opacity: 0;
+        }
+        to {
+          max-height: 300px;
+          opacity: 1;
+        }
       }
     </style>
   </head>
   <body>
     <header>
-      <h1>MiniTwitter Task Checklist</h1>
+      <h1>🚀 MiniTwitter Project Checklist</h1>
     </header>
 
     <div class="container">
       <ul id="task-list">
+        <!-- Task Example -->
         <li>
           <div class="task-title">
             <input type="checkbox" class="checkbox" />
-            <h3>Diseño del esquema de base de datos (ERM)</h3>
-            <span class="priority high-priority">Alta prioridad</span>
+            <h3>📦 Backend Setup</h3>
+            <span class="priority priority-high">Alta prioridad</span>
           </div>
           <div class="task-details">
-            <p>
-              Crea un modelo ER completo utilizando la notación de pata de
-              cuervo que refleje el esquema de la base de datos. Incluir:
-            </p>
+            <p>Configurar el backend con los siguientes pasos:</p>
             <ul>
               <li>
-                Entidades clave como Usuarios, Publicaciones, Comentarios y
-                Roles.
+                <input type="checkbox" /> Configurar el servidor
+                (Node.js/Express).
               </li>
               <li>
-                Relaciones entre estas entidades con cardinalidades claras.
+                <input type="checkbox" /> Crear la estructura de carpetas para
+                el código.
+              </li>
+              <li>
+                <input type="checkbox" /> Configurar un sistema de autenticación
+                (JWT o OAuth).
+              </li>
+              <li><input type="checkbox" /> Conexión a la base de datos.</li>
+            </ul>
+          </div>
+        </li>
+
+        <li>
+          <div class="task-title">
+            <input type="checkbox" class="checkbox" />
+            <h3>📊 Base de Datos</h3>
+            <span class="priority priority-high">Alta prioridad</span>
+          </div>
+          <div class="task-details">
+            <p>Diseñar y configurar la base de datos:</p>
+            <ul>
+              <li>
+                <input type="checkbox" /> Crear esquema ERM (Usuarios,
+                Publicaciones, Comentarios, Roles).
+              </li>
+              <li>
+                <input type="checkbox" /> Crear migraciones y seeders iniciales.
+              </li>
+              <li><input type="checkbox" /> Probar relaciones entre tablas.</li>
+              <li>
+                <input type="checkbox" /> Implementar validaciones y
+                restricciones en la BD.
               </li>
             </ul>
           </div>
         </li>
+
         <li>
           <div class="task-title">
             <input type="checkbox" class="checkbox" />
-            <h3>Diagrama UML de la lógica del backend</h3>
-            <span class="priority high-priority">Alta prioridad</span>
+            <h3>💻 Frontend</h3>
+            <span class="priority priority-medium">Media prioridad</span>
           </div>
           <div class="task-details">
-            <p>Elabora un diagrama UML que cubra:</p>
+            <p>Desarrollar la interfaz de usuario:</p>
             <ul>
               <li>
-                Clases principales como Usuario, Publicación, Comentario y Rol.
+                <input type="checkbox" /> Configurar el proyecto frontend
+                (React/Vue/Angular).
               </li>
-              <li>Sus métodos, atributos y relaciones.</li>
-              <li>Modificadores de acceso (private, protected, public).</li>
+              <li>
+                <input type="checkbox" /> Crear vistas iniciales (Login,
+                Registro, Dashboard).
+              </li>
+              <li>
+                <input type="checkbox" /> Diseñar componentes reutilizables.
+              </li>
+              <li><input type="checkbox" /> Integrar el diseño responsive.</li>
             </ul>
           </div>
         </li>
+
         <li>
           <div class="task-title">
             <input type="checkbox" class="checkbox" />
-            <h3>Registro e inicio de sesión</h3>
-            <span class="priority high-priority">Alta prioridad</span>
+            <h3>🛠️ Funcionalidades Principales</h3>
+            <span class="priority priority-medium">Media prioridad</span>
           </div>
           <div class="task-details">
-            <p>Desarrolla las funcionalidades para:</p>
+            <p>Implementar funcionalidades del sistema:</p>
             <ul>
-              <li>Registro de usuarios con nombre de usuario y contraseña.</li>
+              <li><input type="checkbox" /> Registro e inicio de sesión.</li>
               <li>
-                Inicio de sesión seguro, validando credenciales en el backend.
+                <input type="checkbox" /> Crear publicaciones (formulario y
+                validación).
               </li>
               <li>
-                Implementar cifrado seguro de contraseñas (por ejemplo, bcrypt).
-              </li>
-            </ul>
-          </div>
-        </li>
-        <li>
-          <div class="task-title">
-            <input type="checkbox" class="checkbox" />
-            <h3>Gestión de publicaciones</h3>
-            <span class="priority high-priority">Alta prioridad</span>
-          </div>
-          <div class="task-details">
-            <p>Implementa las siguientes funcionalidades:</p>
-            <ul>
-              <li>
-                Crear publicaciones con texto limitado (similar a tweets).
-              </li>
-              <li>Editar publicaciones propias.</li>
-              <li>Eliminar publicaciones.</li>
-            </ul>
-          </div>
-        </li>
-        <li>
-          <div class="task-title">
-            <input type="checkbox" class="checkbox" />
-            <h3>Comentarios en publicaciones</h3>
-            <span class="priority medium-priority">Media prioridad</span>
-          </div>
-          <div class="task-details">
-            <p>Asegúrate de que los usuarios puedan:</p>
-            <ul>
-              <li>Agregar comentarios a publicaciones existentes.</li>
-              <li>Editar sus propios comentarios.</li>
-              <li>Eliminar comentarios propios.</li>
-            </ul>
-          </div>
-        </li>
-        <li>
-          <div class="task-title">
-            <input type="checkbox" class="checkbox" />
-            <h3>Gestión de roles</h3>
-            <span class="priority medium-priority">Media prioridad</span>
-          </div>
-          <div class="task-details">
-            <p>Implementa los siguientes roles y permisos:</p>
-            <ul>
-              <li>
-                <strong>Usuario:</strong> Crear, editar y eliminar sus propias
-                publicaciones y comentarios.
+                <input type="checkbox" /> Editar y eliminar publicaciones
+                propias.
               </li>
               <li>
-                <strong>Moderador:</strong> Editar y eliminar cualquier
-                publicación o comentario.
+                <input type="checkbox" /> Agregar comentarios a publicaciones.
               </li>
               <li>
-                <strong>Administrador:</strong> Gestión completa de usuarios,
-                publicaciones y comentarios (incluido bloquear usuarios).
-              </li>
-            </ul>
-          </div>
-        </li>
-        <li>
-          <div class="task-title">
-            <input type="checkbox" class="checkbox" />
-            <h3>Funcionalidad de Me gusta / No me gusta</h3>
-            <span class="priority low-priority">Baja prioridad</span>
-          </div>
-          <div class="task-details">
-            <p>Permitir que los usuarios puedan:</p>
-            <ul>
-              <li>Valorar publicaciones con "Me gusta" o "No me gusta".</li>
-              <li>
-                Visualizar el conteo de estas interacciones en cada publicación.
-              </li>
-            </ul>
-          </div>
-        </li>
-        <li>
-          <div class="task-title">
-            <input type="checkbox" class="checkbox" />
-            <h3>Pruebas y documentación</h3>
-            <span class="priority low-priority">Baja prioridad</span>
-          </div>
-          <div class="task-details">
-            <p>Incluye:</p>
-            <ul>
-              <li>
-                Definición de casos de prueba que cubran todas las
-                funcionalidades principales.
-              </li>
-              <li>Un informe detallado de los resultados de las pruebas.</li>
-              <li>
-                Documentación técnica sobre la arquitectura y el uso del
-                sistema.
-              </li>
-            </ul>
-          </div>
-        </li>
-        <li>
-          <div class="task-title">
-            <input type="checkbox" class="checkbox" />
-            <h3>Frontend y diseño</h3>
-            <span class="priority low-priority">Baja prioridad</span>
-          </div>
-          <div class="task-details">
-            <p>Usa las mejores prácticas para el diseño:</p>
-            <ul>
-              <li>Crear una interfaz de usuario amigable y responsiva.</li>
-              <li>
-                Organizar el código del frontend en módulos y archivos
-                coherentes.
-              </li>
-              <li>
-                Utilizar frameworks CSS como Bootstrap o Tailwind si es
-                necesario.
+                <input type="checkbox" /> Sistema de roles (Usuario, Moderador,
+                Administrador).
               </li>
             </ul>
           </div>
@@ -273,6 +275,7 @@
     </div>
 
     <script>
+      // Toggle task details
       document.querySelectorAll('.task-title').forEach((task) => {
         task.addEventListener('click', () => {
           const details = task.nextElementSibling;
@@ -281,6 +284,7 @@
         });
       });
 
+      // Save progress to localStorage
       const checkboxes = document.querySelectorAll('.checkbox');
       const savedProgress =
         JSON.parse(localStorage.getItem('taskProgress')) || {};

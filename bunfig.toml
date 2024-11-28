@@ -1,0 +1,3 @@
+name = "TwitterEX"
+main = "server/index.ts"
+tsconfig = "server/tsconfig.json"

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "jsx": "react-jsx", // Configuración para React con la nueva transformación JSX
-    "target": "ES6", // O el nivel de ECMAScript que prefieras
+    "jsx": "react-jsx",
+    "target": "ES6",
     "module": "ESNext",
     "strict": true,
     "esModuleInterop": true,
@@ -9,7 +9,11 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": "./", // Base para los paths relativos
+    "paths": {
+      "@/*": ["src/*"] // Alias para la carpeta src
+    }
   },
   "include": ["src/**/*", "server/**/*"],
   "exclude": ["node_modules"]

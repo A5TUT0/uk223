@@ -4,6 +4,7 @@
   "type": "module",
   "devDependencies": {
     "@types/bun": "latest",
+    "@types/cors": "^2.8.17",
     "@types/node": "^22.10.0",
     "ts-node-dev": "^2.0.0"
   },

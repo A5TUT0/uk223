@@ -24,7 +24,7 @@ export class Database {
     // await this.executeSQL(TWEET_TABLE);
   };
 
-  public executeSQL = async (query: string, value: any[]) => {
+  public executeSQL = async (query: string, value?: any[]) => {
     try {
       const conn = await this._pool.getConnection();
       try {

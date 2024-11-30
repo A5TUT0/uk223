@@ -48,7 +48,7 @@ export class UserController {
 
       if (!username || !email || !password) {
         return res.status(400).json({
-          error: 'ValidationError',
+          type: 'error',
           message: 'All fields are required.',
         });
       }
@@ -60,8 +60,17 @@ export class UserController {
       ]);
       if (Array.isArray(existingUser) && existingUser.length > 0) {
         return res.status(409).json({
-          error: 'ConflictError',
+          type: 'error',
           message: 'Username or email already exists.',
+        });
+      }
+      const passwordRegex =
+        /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])(?=.{8,40}$)/;
+      if (!passwordRegex.test(password)) {
+        return res.status(400).json({
+          type: 'warning',
+          message:
+            'Password must be between 8 and 40 characters long and contain at least one number.',
         });
       }
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -74,13 +83,14 @@ export class UserController {
       this.db.executeSQL(query, value);
       const token = this.generateAccessToken(username);
       return res.status(201).json({
+        type: 'success',
         message: 'User registered successfully.',
         token,
       });
     } catch (error) {
       console.error(error);
       return res.status(500).json({
-        error: 'ServerError',
+        type: 'error',
         message: 'Internal server error.',
       });
     }
@@ -91,7 +101,7 @@ export class UserController {
 
       if (!username || !password) {
         return res.status(400).json({
-          error: 'ValidationError',
+          type: 'error',
           message: 'Username and password are required.',
         });
       }
@@ -105,7 +115,7 @@ export class UserController {
 
       if (!Array.isArray(results) || results.length === 0) {
         return res.status(404).json({
-          error: 'NotFoundError',
+          type: 'error',
           message: 'Invalid User or Password.',
         });
       }
@@ -115,20 +125,21 @@ export class UserController {
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
         return res.status(401).json({
-          error: 'UnauthorizedError',
+          type: 'error',
           message: 'Invalid credentials.',
         });
       }
       const token = this.generateAccessToken(user.username);
 
       return res.status(200).json({
+        type: 'success',
         message: 'Login successful.',
         token,
       });
     } catch (error) {
       console.error(error);
       return res.status(500).json({
-        error: 'ServerError',
+        type: 'error',
         message: 'Internal server error.',
       });
     }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { NewPost } from './NewPost';
 import { Post } from './Post';
 import axios from 'axios';
@@ -13,7 +13,7 @@ interface PostType {
     userId: number;
 }
 
-export default function CentralContent() {
+export default function Content() {
     const [posts, setPosts] = useState<PostType[]>([]);
     const [currentUserId, setCurrentUserId] = useState<number | null>(null);
 
@@ -33,11 +33,17 @@ export default function CentralContent() {
     const fetchPosts = async () => {
         try {
             const response = await axios.get('http://localhost:3000/posts');
-            setPosts(response.data.posts);
+            const sortedPosts = response.data.posts.sort(
+                (a: PostType, b: PostType) =>
+                    new Date(b.creationDate).getTime() -
+                    new Date(a.creationDate).getTime()
+            );
+            setPosts(sortedPosts);
         } catch (error) {
             console.error('Error fetching posts:', error);
         }
     };
+
 
     const handleNewPost = async (content: string) => {
         const token = localStorage.getItem('token');
@@ -77,16 +83,19 @@ export default function CentralContent() {
         if (!token) return;
 
         try {
-            await axios.put(
-                `http://localhost:3000/posts/${id}`, // URL corregida
+            const response = await axios.put(
+                `http://localhost:3000/posts/${id}`,
                 { content: newContent },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            setPosts(
-                posts.map((post) =>
-                    post.id === id ? { ...post, content: newContent } : post
-                )
-            );
+
+            if (response.data.type === 'success') {
+                setPosts(
+                    posts.map((post) =>
+                        post.id === id ? { ...post, content: newContent } : post
+                    )
+                );
+            }
         } catch (error) {
             console.error('Error editing post:', error);
         }

@@ -30,15 +30,14 @@ const RegisterForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${API_URL}/register`, formData, {
+      await axios.post(`${API_URL}/register`, formData, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
       setMessage({ type: 'success', text: 'Registration successful!' });
-      navigate('/');
-      // Redirige después de 2 segundos (opcional)
-    } catch (error: any) {
+      navigate('/login');
+    } catch (error: unknown) {
       const errorMessage = error.response?.data?.message || 'An unexpected error occurred.';
       setMessage({ type: 'error', text: errorMessage });
     }

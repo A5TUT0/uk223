@@ -3,5 +3,12 @@
   "singleQuote": true,
   "tabWidth": 2,
   "trailingComma": "es5",
-  "endOfLine": "auto"
+  "endOfLine": "lf",
+  "arrowParens": "always",
+  "printWidth": 80,
+  "bracketSpacing": true,
+  "jsxSingleQuote": false,
+  "proseWrap": "preserve",
+  "embeddedLanguageFormatting": "auto",
+  "quoteProps": "as-needed"
 }

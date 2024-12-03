@@ -1,0 +1,91 @@
+C:.
+│   .env
+│   .eslintrc.cjs
+│   .gitignore
+│   .prettierrc
+│   bun.lockb
+│   bunfig.toml
+│   Checklist.html
+│   docker-compose.yaml
+│   ERM.png
+│   eslint.config.js
+│   index.html
+│   LB_223_01.pdf
+│   package.json
+│   postcss.config.js
+│   README.md
+│   tailwind.config.js
+│   todo.md
+│   tsconfig.app.json
+│   tsconfig.json
+│   tsconfig.node.json
+│   UML.drawio.png
+│   vite.config.ts
+│
+├───.vscode
+│       launch.json
+│
+├───public
+│       vite.svg
+│
+├───server
+│   │   .env
+│   │   .gitignore
+│   │   bun.lockb
+│   │   index.ts
+│   │   package.json
+│   │   README.md
+│   │   tsconfig.json
+│   │
+│   ├───class
+│   │       api.ts
+│   │       db.ts
+│   │       index.ts
+│   │       Post.ts
+│   │       PostController.ts
+│   │       user.ts
+│   │
+│   └───types
+│           index.ts
+│           schema.ts
+│           user.ts
+│
+└───src
+    │   App.css
+    │   App.tsx
+    │   Home.tsx
+    │   index.css
+    │   layout.tsx
+    │   main.tsx
+    │   providers.tsx
+    │   vite-env.d.ts
+    │
+    ├───assets
+    │       react.svg
+    │
+    ├───components
+    │   │   alert.tsx
+    │   │   centralContent.tsx
+    │   │   Comment.tsx
+    │   │   Content.tsx
+    │   │   LeftSidebar.tsx
+    │   │   loginForm.tsx
+    │   │   NewPost.tsx
+    │   │   notFound.tsx
+    │   │   Post.tsx
+    │   │   registerForm.tsx
+    │   │   settings.tsx
+    │   │
+    │   └───ui
+    │           avatar.tsx
+    │           button.tsx
+    │           card.tsx
+    │           input.tsx
+    │           label.tsx
+    │           switch.tsx
+    │           textarea.tsx
+    │
+    └───pages
+            404.tsx
+            login.tsx
+            register.tsx

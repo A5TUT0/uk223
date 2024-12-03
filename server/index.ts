@@ -1,36 +1,24 @@
-import express, { Express } from 'express';
-import dotenv from 'dotenv';
+import express from 'express';
 import cors from 'cors';
-import { Database, UserController, API } from './class';
-dotenv.config();
+import { API } from './class/api';
+import { UserController } from './class/user';
+import { PostController } from './class/PostController';
+import { CommentController } from './class/CommentController';
+import { Database } from './class/db';
 
-class Backend {
-  public app: Express;
-  private database: Database;
-  private userController: UserController;
-  private api: API;
+const db = new Database();
 
-  constructor() {
-    this.app = express();
-    this.database = new Database();
-    this.userController = new UserController(this.database);
-    this.setupMiddleware();
-    this.api = new API(this.app, this.userController);
-    this.startServer();
-  }
+const userController = new UserController(db);
+const postController = new PostController(db);
+const commentController = new CommentController(db);
 
-  private setupMiddleware() {
-    this.app.use(express.json());
-    this.app.use(cors());
-  }
+const app = express();
+app.use(cors());
+app.use(express.json());
 
-  private startServer() {
-    const port = process.env.PORT || 3000;
-    this.app.listen(port, () => {
-      console.log(`Server running on port 3000`);
-    });
-  }
-}
+new API(app, userController, postController, commentController);
 
-const backend = new Backend();
-export const viteNodeApp = backend.app;
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

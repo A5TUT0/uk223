@@ -1,5 +1,10 @@
 import mysql from 'mysql2/promise';
-import { USER_TABLE } from '../types/schema';
+import {
+  USER_TABLE,
+  Posts_TABLE,
+  Comments_TABLE,
+  Votes_TABLE,
+} from '../types/schema';
 
 export class Database {
   // Properties
@@ -21,7 +26,9 @@ export class Database {
   private initializeDBSchema = async () => {
     console.log('Initializing DB schema...');
     await this.executeSQL(USER_TABLE);
-    // await this.executeSQL(TWEET_TABLE);
+    await this.executeSQL(Posts_TABLE);
+    await this.executeSQL(Comments_TABLE);
+    await this.executeSQL(Votes_TABLE);
   };
 
   public executeSQL = async (query: string, value?: any[]) => {
@@ -31,7 +38,7 @@ export class Database {
         const [results] = await conn.query(query, value);
         return results;
       } finally {
-        conn.release(); // Use `release` instead of `end` to keep the connection in the pool
+        conn.release();
       }
     } catch (err) {
       console.error('Error executing query:', err);

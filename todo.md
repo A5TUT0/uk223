@@ -17,36 +17,36 @@
 
 #### (0-3 Puntos) **Creación y Gestión de Publicaciones**
 
-- [ ] **(0-1 Punto)** Crear una publicación (solo texto es suficiente).
-- [ ] **(0-1 Punto)** Editar una publicación.
-- [ ] **(0-1 Punto)** Eliminar una publicación.
+- [x] **(0-1 Punto)** Crear una publicación (solo texto es suficiente).
+- [x] **(0-1 Punto)** Editar una publicación.
+- [x] **(0-1 Punto)** Eliminar una publicación.
 
 #### (0-3 Puntos) **Funcionalidad de Discusión y Comentarios**
 
-- [ ] **(0-1 Punto)** Crear comentarios para una publicación.
-- [ ] **(0-1 Punto)** Editar comentarios.
-- [ ] **(0-1 Punto)** Eliminar comentarios.
+- [x] **(0-1 Punto)** Crear comentarios para una publicación.
+- [x] **(0-1 Punto)** Editar comentarios.
+- [x] **(0-1 Punto)** Eliminar comentarios.
 
 #### (0-2 Puntos) **Funcionalidad de Me gusta/No me gusta**
 
-- [ ] **(0-1 Punto)** Evaluar publicaciones con «Me gusta» / «No me gusta».
-- [ ] **(0-1 Punto)** Mostrar las calificaciones en las publicaciones.
+- [x] **(0-1 Punto)** Evaluar publicaciones con «Me gusta» / «No me gusta».
+- [x] **(0-1 Punto)** Mostrar las calificaciones en las publicaciones.
 
 #### (0-2 Puntos) **Feed de Discusión**
 
-- [ ] **(0-1 Punto)** Mostrar cronológicamente todas las publicaciones creadas en la plataforma.
+- [x] **(0-1 Punto)** Mostrar cronológicamente todas las publicaciones creadas en la plataforma.
 - [ ] **(0-1 Punto)** Diseño amigable del feed.
 
 #### (0-2 Puntos) **Perfil de Usuario**
 
-- [ ] **(0-1 Punto)** Cambiar nombre de usuario y contraseña, validando la disponibilidad del nombre de usuario.
-- [ ] **(0-1 Punto)** Mostrar un resumen de las publicaciones y comentarios creados (actividades/acceso rápido).
+- [x] **(0-1 Punto)** Cambiar nombre de usuario y contraseña, validando la disponibilidad del nombre de usuario.
+- [x] **(0-1 Punto)** Mostrar un resumen de las publicaciones y comentarios creados (actividades/acceso rápido).
 
 #### (0-3 Puntos) **Gestión de Roles**
 
 - [ ] **(0-1 Punto)** Implementar el rol de usuario (crear/editar/eliminar publicaciones y comentarios propios).
 - [ ] **(0-1 Punto)** Implementar el rol de moderador (editar/eliminar cualquier publicación o comentario).
-- [ ] **(0-1 Punto)** Implementar el rol de administrador (gestionar todo, incluyendo bloquear usuarios).
+- [ ] **(0-1 Punto)** Implementar el rol de administrador (gestionar todo, incluyendo bloquear usuarios).ñ
 
 #### (0-2 Puntos) **Frontend y Estructuración**
 

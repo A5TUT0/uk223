@@ -1,5 +1,5 @@
-import { authenticateToken } from './authMiddleware';
-import { UserController } from './userController';
+import { authenticateToken, authorizeRole } from './authMiddleware';
+import { UserController } from './user';
 import { PostController } from './PostController';
 import { CommentController } from './CommentController';
 import { Express, Request, Response } from 'express';
@@ -25,17 +25,19 @@ export class API {
   }
 
   private setupRoutes() {
-    // Rutas de usuario
-    this.app.post('/register', (req: Request, res: Response) => {
-      this.userController.register(req, res);
-    });
+    this.app.post('/register', (req: Request, res: Response) =>
+      this.userController.register(req, res)
+    );
 
-    this.app.post('/login', (req: Request, res: Response) => {
-      this.userController.login(req, res);
-    });
+    this.app.post('/login', (req: Request, res: Response) =>
+      this.userController.login(req, res)
+    );
 
     this.app.post('/change-username', authenticateToken, (req, res) =>
       this.userController.changeUsername(req, res)
+    );
+    this.app.post('/logout', authenticateToken, (req, res) =>
+      this.userController.logout(req, res)
     );
 
     this.app.post('/change-password', authenticateToken, (req, res) =>
@@ -46,7 +48,31 @@ export class API {
       this.userController.deleteAccount(req, res)
     );
 
-    // Rutas de post (protegidas con middleware)
+    this.app.get('/profile/activity', authenticateToken, (req, res) =>
+      this.userController.getUserActivity(req, res)
+    );
+
+    this.app.get(
+      '/users',
+      authenticateToken,
+      authorizeRole(['admin']),
+      (req, res) => this.userController.getAllUsers(req, res)
+    );
+
+    this.app.put(
+      '/users/block',
+      authenticateToken,
+      authorizeRole(['admin']),
+      (req, res) => this.userController.blockUser(req, res)
+    );
+
+    this.app.put(
+      '/users/assign-role',
+      authenticateToken,
+      authorizeRole(['admin']),
+      (req, res) => this.userController.assignRole(req, res)
+    );
+
     this.app.post('/posts', authenticateToken, (req, res) =>
       this.postController.createPost(req, res)
     );
@@ -67,7 +93,10 @@ export class API {
       this.postController.votePost(req, res)
     );
 
-    // Rutas de comentarios
+    this.app.get('/posts/:id/votes', (req, res) =>
+      this.postController.getVotes(req, res)
+    );
+
     this.app.post('/comments', authenticateToken, (req, res) =>
       this.commentController.createComment(req, res)
     );
@@ -82,13 +111,6 @@ export class API {
 
     this.app.get('/comments/:postId', (req, res) =>
       this.commentController.getComments(req, res)
-    );
-
-    this.app.get('/posts/:id/votes', (req, res) =>
-      this.postController.getVotes(req, res)
-    );
-    this.app.get('/profile/activity', authenticateToken, (req, res) =>
-      this.userController.getUserActivity(req, res)
     );
   }
 }

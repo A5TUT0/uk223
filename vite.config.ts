@@ -11,15 +11,15 @@ export default defineConfig({
     },
   },
   define: {
-    global: 'globalThis', // Polyfill para `global`
-    'process.env': {}, // Polyfill para `process.env`
+    global: 'globalThis',
+    'process.env': {},
   },
   optimizeDeps: {
     esbuildOptions: {
       plugins: [
         NodeGlobalsPolyfillPlugin({
           process: true,
-          buffer: true, // Si usas Buffer
+          buffer: true,
         }),
       ],
     },

@@ -6,8 +6,8 @@
     "moduleResolution": "Node",
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "outDir": "./dist", // Carpeta de salida
-    "rootDir": "./" // Carpeta raíz
+    "outDir": "./dist",
+    "rootDir": "./"
   },
   "include": ["./**/*.ts"],
   "exclude": ["node_modules", "./dist"]

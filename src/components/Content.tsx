@@ -109,9 +109,11 @@ export default function Content() {
                     key={post.id}
                     {...post}
                     isOwner={currentUserId === post.userId}
+                    canModerate={currentUserRole === 'admin' || currentUserRole === 'moderator'}
                     onDelete={handleDeletePost}
                     onEdit={handleEditPost}
                 />
+
             ))}
         </div>
     );

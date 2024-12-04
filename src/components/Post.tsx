@@ -1,13 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Comment } from './Comment';
-import { LikeDislikeButtons } from './LikeDislikeButtons';
+import { motion } from 'framer-motion';
+import { ThumbsDown, ThumbsUp } from 'lucide-react';
+
+interface CommentType {
+    id: number;
+    username: string;
+    content: string;
+    creationDate: string;
+    userId: number;
+}
 
 interface PostProps {
     id: number;
@@ -15,42 +18,35 @@ interface PostProps {
     content: string;
     creationDate: string;
     isOwner: boolean;
+    userRole: string;
+    currentUserId: number | null;
     onDelete: (id: number) => void;
     onEdit: (id: number, newContent: string) => void;
 }
 
-interface DecodedToken {
-    id: number;
-    username: string;
-    exp: number;
-}
-
-export function Post({ id, username, content, creationDate, isOwner, onDelete, onEdit }: PostProps) {
+export function Post({
+    id,
+    username,
+    content,
+    creationDate,
+    isOwner,
+    userRole,
+    currentUserId,
+    onDelete,
+    onEdit,
+}: PostProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [editedContent, setEditedContent] = useState(content);
-    const [comments, setComments] = useState<any[]>([]);
+    const [comments, setComments] = useState<CommentType[]>([]);
     const [newComment, setNewComment] = useState('');
     const [likes, setLikes] = useState(0);
     const [dislikes, setDislikes] = useState(0);
     const [userVote, setUserVote] = useState<'like' | 'dislike' | null>(null);
-    const [currentUserId, setCurrentUserId] = useState<number | null>(null);
+    const [showComments, setShowComments] = useState(false);
 
     useEffect(() => {
-        const fetchInitialData = async () => {
-            const token = localStorage.getItem('token');
-            if (token) {
-                try {
-                    const decoded: DecodedToken = jwtDecode(token);
-                    setCurrentUserId(decoded.id);
-                } catch (error) {
-                    console.error('[DECODE TOKEN] Failed to decode token:', error);
-                }
-            }
-            await fetchComments();
-            await fetchVotes();
-        };
-
-        fetchInitialData();
+        fetchComments();
+        fetchVotes();
     }, []);
 
     const fetchComments = async () => {
@@ -70,15 +66,13 @@ export function Post({ id, username, content, creationDate, isOwner, onDelete, o
     const fetchVotes = async () => {
         try {
             const response = await fetch(`http://localhost:3000/posts/${id}/votes`);
-            if (!response.ok) {
-                console.error('[FETCH VOTES] Failed to fetch votes:', response.status);
-                return;
-            }
             const data = await response.json();
             if (data.type === 'success') {
                 setLikes(data.likes);
                 setDislikes(data.dislikes);
                 setUserVote(data.userVote);
+            } else {
+                console.error('[FETCH VOTES] Error:', data.message);
             }
         } catch (error) {
             console.error('[FETCH VOTES] Network error:', error);
@@ -97,9 +91,9 @@ export function Post({ id, username, content, creationDate, isOwner, onDelete, o
             });
 
             if (response.ok) {
-                await fetchVotes(); // Refresh votes after successful operation
+                fetchVotes();
             } else {
-                console.error('[VOTE] Failed to vote on post.');
+                console.error('[VOTE] Failed to vote.');
             }
         } catch (error) {
             console.error('[VOTE] Network error:', error);
@@ -108,6 +102,7 @@ export function Post({ id, username, content, creationDate, isOwner, onDelete, o
 
     const handleAddComment = async () => {
         if (!newComment.trim()) return;
+
         try {
             const response = await fetch('http://localhost:3000/comments', {
                 method: 'POST',
@@ -129,141 +124,188 @@ export function Post({ id, username, content, creationDate, isOwner, onDelete, o
         }
     };
 
-    const handleEditComment = async (commentId: number, newContent: string) => {
-        try {
-            const response = await fetch(`http://localhost:3000/comments/${commentId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                },
-                body: JSON.stringify({ content: newContent }),
-            });
-            if (response.ok) {
-                setComments(
-                    comments.map((comment) =>
-                        comment.id === commentId ? { ...comment, content: newContent } : comment
-                    )
-                );
-            } else {
-                console.error('[EDIT COMMENT] Failed to edit comment.');
-            }
-        } catch (error) {
-            console.error('[EDIT COMMENT] Network error:', error);
-        }
-    };
-
-    const handleDeleteComment = async (commentId: number) => {
-        try {
-            const response = await fetch(`http://localhost:3000/comments/${commentId}`, {
-                method: 'DELETE',
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                },
-            });
-            if (response.ok) {
-                setComments(comments.filter((comment) => comment.id !== commentId));
-            } else {
-                console.error('[DELETE COMMENT] Failed to delete comment.');
-            }
-        } catch (error) {
-            console.error('[DELETE COMMENT] Network error:', error);
-        }
-    };
-
     return (
-        <Card className="mb-4 bg-black text-white border border-gray-800 shadow-lg">
-            <CardHeader className="border-b border-gray-700 pb-2">
-                <p className="font-semibold text-lg text-white">{username}</p>
-                <small className="text-gray-400 text-sm">
-                    {new Date(creationDate).toLocaleString()}
-                </small>
-            </CardHeader>
-            <CardContent className="p-4">
+        <div className="max-w-2xl mx-auto mb-6 p-4 bg-black text-white rounded-lg border border-gray-700 shadow-md">
+            {/* Header */}
+            <div className="flex justify-between items-start mb-4">
+                <div>
+                    <p className="text-xl font-semibold">{username}</p>
+                    <small className="text-gray-500">
+                        {new Date(creationDate).toLocaleString()}
+                    </small>
+                </div>
+                {(isOwner || userRole === 'admin' || userRole === 'moderator') && (
+                    <motion.div
+                        className="flex space-x-4"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                    >
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-500 focus:ring-2 focus:ring-blue-300 transition"
+                            onClick={() => setIsEditing(!isEditing)}
+                        >
+                            Edit
+                        </motion.button>
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            className="px-4 py-2 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-500 focus:ring-2 focus:ring-red-300 transition"
+                            onClick={() => onDelete(id)}
+                        >
+                            Delete
+                        </motion.button>
+                    </motion.div>
+                )}
+            </div>
+
+
+            {/* Content */}
+            <div className="mb-4">
                 {isEditing ? (
                     <div className="space-y-3">
-                        <Input
-                            className="bg-gray-900 text-white border-gray-700 focus:ring-2 focus:ring-gray-500"
+                        <textarea
                             value={editedContent}
                             onChange={(e) => setEditedContent(e.target.value)}
+                            className="w-full p-3 bg-gray-900 border border-gray-700 rounded-md text-white focus:ring-2 focus:ring-gray-500"
                         />
                         <div className="flex space-x-2">
-                            <Button
-                                className="bg-gray-700 hover:bg-gray-600 text-white"
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                className="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 transition"
                                 onClick={() => {
                                     onEdit(id, editedContent);
                                     setIsEditing(false);
                                 }}
                             >
                                 Save
-                            </Button>
-                            <Button
-                                className="bg-gray-900 text-gray-400 hover:text-white"
-                                variant="ghost"
+                            </motion.button>
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                className="px-4 py-2 bg-gray-800 text-gray-300 rounded-md hover:bg-gray-700 transition"
                                 onClick={() => setIsEditing(false)}
                             >
                                 Cancel
-                            </Button>
+                            </motion.button>
                         </div>
                     </div>
                 ) : (
-                    <p className="text-gray-300">{content}</p>
+                    <p className="text-lg font-medium">{content}</p>
                 )}
-                {isOwner && (
-                    <div className="mt-4 flex space-x-3">
-                        <Button
-                            className="bg-gray-800 hover:bg-gray-700 text-white"
-                            onClick={() => setIsEditing(true)}
+            </div>
+
+            {/* Likes/Dislikes and Comments */}
+            <div className="border-t border-gray-700 pt-4">
+                <div className="flex justify-between items-center mb-4">
+                    <div className="flex items-center space-x-4">
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className={`flex items-center space-x-2 px-3 py-1 rounded-lg text-sm font-medium transition ${userVote === 'like' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-300'
+                                } hover:bg-blue-500 focus:ring-2 focus:ring-blue-300`}
+                            onClick={() => {
+                                handleVote('like');
+                                setUserVote('like');
+                            }}
                         >
-                            Edit
-                        </Button>
-                        <Button
-                            className="bg-red-600 hover:bg-red-500 text-white"
-                            variant="destructive"
-                            onClick={() => onDelete(id)}
+                            <ThumbsUp className="h-5 w-5" />
+                            <span>{likes}</span>
+                        </motion.button>
+
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className={`flex items-center space-x-2 px-3 py-1 rounded-lg text-sm font-medium transition ${userVote === 'dislike' ? 'bg-red-600 text-white' : 'bg-gray-800 text-gray-300'
+                                } hover:bg-red-500 focus:ring-2 focus:ring-red-300`}
+                            onClick={() => {
+                                handleVote('dislike');
+                                setUserVote('dislike');
+                            }}
                         >
-                            Delete
-                        </Button>
+                            <ThumbsDown className="h-5 w-5" />
+                            <span>{dislikes}</span>
+                        </motion.button>
                     </div>
-                )}
-                <div className="mt-4">
-                    <LikeDislikeButtons
-                        postId={id}
-                        initialLikes={likes}
-                        initialDislikes={dislikes}
-                        userVote={userVote}
-                        onVote={handleVote}
-                    />
+
+                    <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800 focus:ring-2 focus:ring-gray-600 transition"
+                        onClick={() => setShowComments(!showComments)}
+                    >
+                        {showComments ? (
+                            <>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-4 w-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M18.364 5.636l-12.728 12.728M5.636 5.636l12.728 12.728"
+                                    />
+                                </svg>
+                                <span>Hide Comments</span>
+                            </>
+                        ) : (
+                            <>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-4 w-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M5 15l7-7 7 7"
+                                    />
+                                </svg>
+                                <span>Show Comments</span>
+                            </>
+                        )}
+                    </motion.button>
+
                 </div>
-                <div className="mt-6">
-                    <h3 className="text-lg font-semibold">Comments</h3>
-                    <div className="mt-4">
+
+                {/* Comments Section */}
+                {showComments && (
+                    <div className="space-y-4">
                         {comments.map((comment) => (
-                            <Comment
+                            <div
                                 key={comment.id}
-                                {...comment}
-                                isOwner={currentUserId === comment.userId}
-                                onEdit={(commentId, newContent) => handleEditComment(commentId, newContent)}
-                                onDelete={handleDeleteComment}
-                            />
+                                className="p-3 bg-black rounded-md border border-gray-800"
+                            >
+                                <p className="font-semibold text-sm text-white">{comment.username}</p>
+                                <p className="text-gray-300">{comment.content}</p>
+                            </div>
                         ))}
+                        <div className="flex space-x-2">
+                            <textarea
+                                value={newComment}
+                                onChange={(e) => setNewComment(e.target.value)}
+                                placeholder="Write a comment..."
+                                className="flex-1 p-3 bg-black border border-gray-800 rounded-md text-white focus:ring-2 focus:ring-white"
+                            />
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                className="px-4 py-2 bg-black text-white border border-gray-800 rounded-md hover:bg-gray-900 transition"
+                                onClick={handleAddComment}
+                            >
+                                Add
+                            </motion.button>
+                        </div>
                     </div>
-                    <div className="mt-4 flex space-x-2">
-                        <Textarea
-                            value={newComment}
-                            onChange={(e) => setNewComment(e.target.value)}
-                            placeholder="Write a comment..."
-                            className="bg-gray-900 text-white border-gray-700 focus:ring-2 focus:ring-gray-500 flex-1"
-                        />
-                        <Button
-                            onClick={handleAddComment}
-                            className="bg-blue-600 hover:bg-blue-500 text-white"
-                        >
-                            Add
-                        </Button>
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
+                )}
+
+
+            </div>
+        </div>
     );
 }

@@ -6,6 +6,7 @@ import Register from './pages/register';
 import Home from './Home';
 import Settings from './components/settings';
 import ProfileActivity from './components/ProfileActivity';
+import AdminDashboard from './components/AdminDashboard';
 
 function App() {
   const isAuthenticated = (): boolean => {
@@ -18,7 +19,7 @@ function App() {
   };
 
   return (
-    <div className="bg-[#09090B] min-h-screen text-white">
+    <div className="min-h-screen text-white">
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -45,6 +46,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ProfileActivity />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
               </ProtectedRoute>
             }
           />

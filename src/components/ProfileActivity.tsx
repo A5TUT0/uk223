@@ -24,12 +24,8 @@ interface UserActivity {
 }
 
 export default function ProfileActivity() {
-    const [activity, setActivity] = useState<UserActivity>({
-        posts: [],
-        comments: [],
-    });
-
-    const [loading, setLoading] = useState(true); // Para mostrar un indicador de carga
+    const [activity, setActivity] = useState<UserActivity>({ posts: [], comments: [] });
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetchUserActivity();
@@ -42,70 +38,99 @@ export default function ProfileActivity() {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
-            console.log('[FETCH USER ACTIVITY] Response data:', response.data);
-
             if (response.data.type === 'success') {
-                const activityData = response.data.activity;
-                if (!Array.isArray(activityData.posts) || !Array.isArray(activityData.comments)) {
-                    throw new Error('Invalid activity structure');
-                }
-                setActivity(activityData);
+                setActivity(response.data.activity);
             }
         } catch (error) {
             console.error('Error fetching user activity:', error);
         } finally {
-            setLoading(false); // Finaliza la carga
+            setLoading(false);
         }
     };
 
     return (
-        <div className="flex">
-            <div className="pr-10">
-                <LeftSidebar />
+        <div
+            className="flex min-h-screen"
+            style={{ color: '#FFFFFF' }}
+        >
+            {/* Sidebar */}
+            <div
+                className="pr-10 min-w-[250px]"
+            >
+                <div className="p-4">
+                    <LeftSidebar />
+                </div>
             </div>
 
-            <div className="pl-44 w-full">
-                <h2 className="text-xl font-bold mb-4">Your Activity</h2>
+            {/* Main Content */}
+            <div className="pl-12 w-full p-6">
+                <h2
+                    className="text-2xl font-bold mb-6 pb-2"
+                    style={{ borderBottom: `1px solid #4B5563` }}
+                >
+                    Your Activity
+                </h2>
 
                 {loading ? (
-                    <p>Loading...</p>
+                    <div className="flex justify-center items-center h-32">
+                        <div
+                            className="animate-spin rounded-full h-10 w-10"
+                            style={{
+                                borderTop: '2px solid #FFFFFF',
+                                borderRight: '2px solid transparent',
+                            }}
+                        ></div>
+                    </div>
                 ) : (
                     <>
-                        <section>
-                            <h3 className="text-lg font-semibold">Posts</h3>
+                        {/* Posts Section */}
+                        <section className="mb-8">
+                            <h3 className="text-xl font-semibold mb-4">Posts</h3>
                             {activity.posts.length > 0 ? (
                                 activity.posts.map((post) => (
-                                    <div key={post.postId} className="p-2 border-b border-gray-300">
+                                    <div
+                                        key={post.postId}
+                                        className="p-4 rounded-lg shadow-md mb-4"
+                                        style={{
+                                            backgroundColor: '#000000',
+                                            border: `1px solid #4B5563`,
+                                        }}
+                                    >
                                         <p className="font-semibold">{post.postContent}</p>
-                                        <small className="text-gray-500">
+                                        <small style={{ color: '#4B5563' }}>
                                             {new Date(post.postDate).toLocaleString()}
                                         </small>
                                     </div>
                                 ))
                             ) : (
-                                <p>No posts available</p>
+                                <p style={{ color: '#4B5563' }}>No posts available.</p>
                             )}
                         </section>
 
-                        <section className="mt-4">
-                            <h3 className="text-lg font-semibold">Comments</h3>
+                        {/* Comments Section */}
+                        <section>
+                            <h3 className="text-xl font-semibold mb-4">Comments</h3>
                             {activity.comments.length > 0 ? (
                                 activity.comments.map((comment) => (
                                     <div
                                         key={comment.commentId}
-                                        className="p-2 border-b border-gray-300"
+                                        className="p-4 rounded-lg shadow-md mb-4"
+                                        style={{
+                                            backgroundColor: '#000000',
+                                            border: `1px solid #4B5563`,
+                                        }}
                                     >
                                         <p className="font-semibold">{comment.commentContent}</p>
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-sm" style={{ color: '#4B5563' }}>
                                             On post: <span className="italic">{comment.postContent}</span>
                                         </p>
-                                        <small className="text-gray-500">
+                                        <small style={{ color: '#4B5563' }}>
                                             {new Date(comment.commentDate).toLocaleString()}
                                         </small>
                                     </div>
                                 ))
                             ) : (
-                                <p>No comments available</p>
+                                <p style={{ color: '#4B5563' }}>No comments available.</p>
                             )}
                         </section>
                     </>

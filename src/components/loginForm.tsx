@@ -29,17 +29,21 @@ const LoginForm = () => {
           'Content-Type': 'application/json',
         },
       });
+
       setMessage({ type: 'success', text: 'Login successful!' });
 
       localStorage.setItem('token', response.data.token);
+      localStorage.setItem('role', response.data.role);
+
       setTimeout(() => {
         navigate('/');
-      },);
+      }, 1000);
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || 'An unexpected error occurred.';
       setMessage({ type: 'error', text: errorMessage });
     }
   };
+
 
   const handleCloseMessage = () => {
     setMessage({ type: '', text: '' });

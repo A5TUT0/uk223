@@ -16,26 +16,38 @@ interface PostType {
 export default function CentralContent() {
     const [posts, setPosts] = useState<PostType[]>([]);
     const [currentUserId, setCurrentUserId] = useState<number | null>(null);
+    const [currentUserRole, setCurrentUserRole] = useState<string | null>(null);
 
     useEffect(() => {
-        fetchUserId();
+        fetchUserInfo();
         fetchPosts();
     }, []);
 
-    const fetchUserId = async () => {
+    const fetchUserInfo = async () => {
         const token = localStorage.getItem('token');
-        if (!token) return;
+        if (!token) {
+            console.error('No token found in localStorage');
+            return;
+        }
 
-        const decoded: any = JSON.parse(atob(token.split('.')[1]));
-        setCurrentUserId(decoded.id);
+        try {
+            const decoded: any = JSON.parse(atob(token.split('.')[1]));
+            console.log('Decoded token:', decoded);
+            setCurrentUserId(decoded.id);
+            setCurrentUserRole(decoded.role);
+        } catch (error) {
+            console.error('[FETCH USER INFO] Error decoding token:', error);
+        }
     };
+
+
 
     const fetchPosts = async () => {
         try {
             const response = await axios.get('http://localhost:3000/posts');
             setPosts(response.data.posts);
         } catch (error) {
-            console.error('Error fetching posts:', error);
+            console.error('[FETCH POSTS] Error:', error);
         }
     };
 
@@ -54,7 +66,7 @@ export default function CentralContent() {
                 setPosts([response.data.post, ...posts]);
             }
         } catch (error) {
-            console.error('Error creating post:', error);
+            console.error('[CREATE POST] Error:', error);
         }
     };
 
@@ -68,7 +80,7 @@ export default function CentralContent() {
             });
             setPosts(posts.filter((post) => post.id !== id));
         } catch (error) {
-            console.error('Error deleting post:', error);
+            console.error('[DELETE POST] Error:', error);
         }
     };
 
@@ -77,18 +89,20 @@ export default function CentralContent() {
         if (!token) return;
 
         try {
-            await axios.put(
-                `http://localhost:3000/posts/${id}`, // URL corregida
+            const response = await axios.put(
+                `http://localhost:3000/posts/${id}`,
                 { content: newContent },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            setPosts(
-                posts.map((post) =>
-                    post.id === id ? { ...post, content: newContent } : post
-                )
-            );
+            if (response.data.type === 'success') {
+                setPosts(
+                    posts.map((post) =>
+                        post.id === id ? { ...post, content: newContent } : post
+                    )
+                );
+            }
         } catch (error) {
-            console.error('Error editing post:', error);
+            console.error('[EDIT POST] Error:', error);
         }
     };
 
@@ -100,9 +114,12 @@ export default function CentralContent() {
                     key={post.id}
                     {...post}
                     isOwner={currentUserId === post.userId}
+                    userRole={currentUserRole || ''}
+                    currentUserId={currentUserId}
                     onDelete={handleDeletePost}
                     onEdit={handleEditPost}
                 />
+
             ))}
         </div>
     );

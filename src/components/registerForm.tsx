@@ -3,8 +3,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-//import dotenv from 'dotenv';
-// dotenv.config();
+
 import Alert from './alert';
 
 const API_URL = 'http://localhost:3000';
@@ -37,14 +36,13 @@ const RegisterForm = () => {
       });
       setMessage({ type: 'success', text: 'Registration successful!' });
       navigate('/login');
-    } catch (error: unknown) {
+    } catch (error: any) {
+
       const errorMessage = error.response?.data?.message || 'An unexpected error occurred.';
       setMessage({ type: 'error', text: errorMessage });
     }
   };
-  const handleCloseMessage = () => {
-    setMessage({ type: '', text: '' });
-  };
+
   return (
     <StyledWrapper>
       <div className="login-box">

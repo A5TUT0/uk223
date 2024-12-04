@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Like from './ui/likeButton';
+import Dislike from './ui/dislikeButton';
 
 interface LikeDislikeButtonsProps {
     postId: number;
@@ -20,7 +22,7 @@ export function LikeDislikeButtons({
     const [currentVote, setCurrentVote] = useState<'like' | 'dislike' | null>(userVote);
 
     useEffect(() => {
-        setCurrentVote(userVote); // Sync with parent state if userVote changes
+        setCurrentVote(userVote);
     }, [userVote]);
 
     const handleVote = (vote: 'like' | 'dislike') => {
@@ -28,11 +30,9 @@ export function LikeDislikeButtons({
         console.log('[HANDLE VOTE] Vote type:', vote);
 
         if (currentVote === vote) {
-            // Undo vote
             setCurrentVote(null);
             onVote(null);
         } else {
-            // Set new vote
             setCurrentVote(vote);
             onVote(vote);
         }
@@ -44,13 +44,13 @@ export function LikeDislikeButtons({
                 className={`text-gray-500 hover:text-green-500 ${currentVote === 'like' ? 'text-green-500' : ''}`}
                 onClick={() => handleVote('like')}
             >
-                👍 {initialLikes}
+                <Like /> {initialLikes}
             </button>
             <button
                 className={`text-gray-500 hover:text-red-500 ${currentVote === 'dislike' ? 'text-red-500' : ''}`}
                 onClick={() => handleVote('dislike')}
             >
-                👎 {initialDislikes}
+                <Dislike /> {initialDislikes}
             </button>
         </div>
     );

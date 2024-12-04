@@ -5,24 +5,44 @@ interface CommentProps {
     username: string;
     content: string;
     creationDate: string;
-    isOwner: boolean;
+    userId: number;
+    currentUserId: number | null;
+    canModerate: boolean;
     onDelete: (id: number) => void;
     onEdit: (id: number, newContent: string) => void;
 }
 
-export function Comment({ id, username, content, creationDate, isOwner, onDelete, onEdit }: CommentProps) {
+export function Comment({
+    id,
+    username,
+    content,
+    creationDate,
+    userId,
+    currentUserId,
+    canModerate,
+    onDelete,
+    onEdit,
+}: CommentProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [editedContent, setEditedContent] = useState(content);
 
+    const canEditOrDelete = currentUserId === userId || canModerate;
+
+    console.log('Comment Render:', {
+        id,
+        userId,
+        currentUserId,
+        canModerate,
+        canEditOrDelete: currentUserId === userId || canModerate,
+    });
+
+
     const handleEditSave = () => {
-        console.log('[EDIT COMMENT] Saving edited comment:', { id, editedContent });
         if (editedContent.trim()) {
             onEdit(id, editedContent);
             setIsEditing(false);
         }
     };
-
-    console.log('[RENDER COMMENT] Rendering comment:', { id, username, isOwner });
 
     return (
         <div className="border-b pb-2 mb-4">
@@ -54,7 +74,8 @@ export function Comment({ id, username, content, creationDate, isOwner, onDelete
             ) : (
                 <p className="mt-2 text-gray-300">{content}</p>
             )}
-            {isOwner && !isEditing && (
+            {/* Botones visibles solo si el usuario actual puede editar/eliminar */}
+            {canEditOrDelete && !isEditing && (
                 <div className="mt-2 flex space-x-2">
                     <button
                         className="text-blue-500 hover:underline"

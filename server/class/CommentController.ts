@@ -8,7 +8,6 @@ export class CommentController {
     this.db = db;
   }
 
-  // Crear un nuevo comentario
   createComment = async (req: Request, res: Response) => {
     try {
       const { postId, content } = req.body;
@@ -18,6 +17,16 @@ export class CommentController {
         return res.status(400).json({
           type: 'error',
           message: 'Post ID and content are required.',
+        });
+      }
+
+      const userQuery = `SELECT is_blocked FROM Users WHERE id = ? LIMIT 1;`;
+      const [user]: any = await this.db.executeSQL(userQuery, [userId]);
+
+      if (user.is_blocked) {
+        return res.status(403).json({
+          type: 'error',
+          message: 'User is blocked and cannot create comments.',
         });
       }
 
@@ -46,12 +55,12 @@ export class CommentController {
     }
   };
 
-  // Editar un comentario
   editComment = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
       const { content } = req.body;
       const userId = req.user?.id;
+      const userRole = req.user?.role;
 
       if (!content) {
         return res
@@ -59,12 +68,18 @@ export class CommentController {
           .json({ type: 'error', message: 'Content is required.' });
       }
 
-      const query = `UPDATE Comments SET Content = ? WHERE ID = ? AND User_ID = ?`;
-      const result: any = await this.db.executeSQL(query, [
-        content,
-        id,
-        userId,
-      ]);
+      let query: string;
+      let params: any[];
+
+      if (userRole === 'moderator' || userRole === 'admin') {
+        query = `UPDATE Comments SET Content = ? WHERE ID = ?`;
+        params = [content, id];
+      } else {
+        query = `UPDATE Comments SET Content = ? WHERE ID = ? AND User_ID = ?`;
+        params = [content, id, userId];
+      }
+
+      const result: any = await this.db.executeSQL(query, params);
 
       if (result.affectedRows === 0) {
         return res.status(403).json({
@@ -84,14 +99,24 @@ export class CommentController {
     }
   };
 
-  // Eliminar un comentario
   deleteComment = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
       const userId = req.user?.id;
+      const userRole = req.user?.role;
 
-      const query = `DELETE FROM Comments WHERE ID = ? AND User_ID = ?`;
-      const result: any = await this.db.executeSQL(query, [id, userId]);
+      let query: string;
+      let params: any[];
+
+      if (userRole === 'moderator' || userRole === 'admin') {
+        query = `DELETE FROM Comments WHERE ID = ?`;
+        params = [id];
+      } else {
+        query = `DELETE FROM Comments WHERE ID = ? AND User_ID = ?`;
+        params = [id, userId];
+      }
+
+      const result: any = await this.db.executeSQL(query, params);
 
       if (result.affectedRows === 0) {
         return res.status(403).json({
@@ -100,9 +125,10 @@ export class CommentController {
         });
       }
 
-      res
-        .status(200)
-        .json({ type: 'success', message: 'Comment deleted successfully.' });
+      res.status(200).json({
+        type: 'success',
+        message: 'Comment deleted successfully.',
+      });
     } catch (error) {
       console.error('[DELETE COMMENT] Error:', error);
       res
@@ -111,7 +137,6 @@ export class CommentController {
     }
   };
 
-  // Obtener comentarios de un post
   getComments = async (req: Request, res: Response) => {
     try {
       const { postId } = req.params;
@@ -125,7 +150,6 @@ export class CommentController {
         ORDER BY c.Creation_Date ASC
       `;
       const comments = await this.db.executeSQL(query, [postId]);
-      console.log('[GET COMMENTS] Query result:', comments);
 
       res.status(200).json({ type: 'success', comments });
     } catch (error) {

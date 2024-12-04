@@ -12,12 +12,12 @@ const Settings: React.FC = () => {
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [alertType, setAlertType] = useState<'success' | 'error' | 'warning'>('success');
-    const [username, setUsername] = useState('');
+    // const [username, setUsername] = useState('');
     const [newUsername, setNewUsername] = useState('');
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
 
-    const API_URL = 'http://localhost:3000'; // Cambia según la configuración del backend
+    const API_URL = 'http://localhost:3000';
 
     const handleSaveUsername = async () => {
         try {
@@ -32,7 +32,6 @@ const Settings: React.FC = () => {
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
-            // Guarda el nuevo token
             const newToken = response.data.token;
             if (newToken) {
                 localStorage.setItem('token', newToken);
@@ -49,17 +48,19 @@ const Settings: React.FC = () => {
     };
 
 
+
+
     const handleSavePassword = async () => {
         try {
-            const token = localStorage.getItem('token'); // Obtén el token del almacenamiento local
+            const token = localStorage.getItem('token');
             if (!token) {
                 throw new Error('Unauthorized. Token missing.');
             }
 
             const response = await axios.post(
                 `${API_URL}/change-password`,
-                { currentPassword, newPassword }, // Solo las contraseñas
-                { headers: { Authorization: `Bearer ${token}` } } // Envía el token en la cabecera
+                { currentPassword, newPassword },
+                { headers: { Authorization: `Bearer ${token}` } }
             );
 
             setAlertType('success');
@@ -73,9 +74,12 @@ const Settings: React.FC = () => {
     };
 
 
+
+
+
     const handleLogout = async () => {
         try {
-            const token = localStorage.getItem('token'); // Obtén el token del almacenamiento local
+            const token = localStorage.getItem('token');
             if (!token) {
                 throw new Error('Unauthorized. Token missing.');
             }
@@ -83,14 +87,16 @@ const Settings: React.FC = () => {
             const response = await axios.post(
                 `${API_URL}/logout`,
                 {},
-                { headers: { Authorization: `Bearer ${token}` } } // Envía el token en la cabecera
+                { headers: { Authorization: `Bearer ${token}` } }
             );
 
-            // Elimina el token del almacenamiento local
             localStorage.removeItem('token');
+            console.log('[LOGOUT] Token removed from localStorage.');
 
             setAlertType('success');
             setAlertMessage(response.data.message || 'Logged out successfully.');
+
+            window.location.href = '/login';
         } catch (error: any) {
             setAlertType('error');
             setAlertMessage(error.response?.data?.message || 'Error logging out.');
@@ -99,22 +105,26 @@ const Settings: React.FC = () => {
         }
     };
 
+
     const handleDeleteAccount = async () => {
         try {
-            const token = localStorage.getItem('token'); // Obtén el token del almacenamiento local
+            const token = localStorage.getItem('token');
             if (!token) {
                 throw new Error('Unauthorized. Token missing.');
             }
 
             const response = await axios.delete(`${API_URL}/delete-account`, {
-                headers: { Authorization: `Bearer ${token}` }, // Envía el token en la cabecera
+                headers: { Authorization: `Bearer ${token}` },
             });
 
-            // Elimina el token del almacenamiento local después de eliminar la cuenta
             localStorage.removeItem('token');
 
             setAlertType('success');
             setAlertMessage(response.data.message || 'Account deleted successfully.');
+
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 2000);
         } catch (error: any) {
             setAlertType('error');
             setAlertMessage(error.response?.data?.message || 'Error deleting account.');
@@ -122,6 +132,7 @@ const Settings: React.FC = () => {
             setShowAlert(true);
         }
     };
+
 
 
     return (

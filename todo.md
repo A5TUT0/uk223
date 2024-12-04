@@ -35,7 +35,7 @@
 #### (0-2 Puntos) **Feed de Discusión**
 
 - [x] **(0-1 Punto)** Mostrar cronológicamente todas las publicaciones creadas en la plataforma.
-- [ ] **(0-1 Punto)** Diseño amigable del feed.
+- [x] **(0-1 Punto)** Diseño amigable del feed.
 
 #### (0-2 Puntos) **Perfil de Usuario**
 
@@ -44,14 +44,17 @@
 
 #### (0-3 Puntos) **Gestión de Roles**
 
-- [ ] **(0-1 Punto)** Implementar el rol de usuario (crear/editar/eliminar publicaciones y comentarios propios).
-- [ ] **(0-1 Punto)** Implementar el rol de moderador (editar/eliminar cualquier publicación o comentario).
-- [ ] **(0-1 Punto)** Implementar el rol de administrador (gestionar todo, incluyendo bloquear usuarios).ñ
+- [x] **(0-1 Punto)** Implementar el rol de usuario (crear/editar/eliminar publicaciones y comentarios propios).
+- [x] **(0-1 Punto)** Implementar el rol de moderador (editar/eliminar cualquier publicación o comentario).
+- [x] **(0-1 Punto)** Implementar el rol de administrador (gestionar todo, incluyendo bloquear usuarios).
+
+Integra la gestión de roles en el frontend.
+Realiza pruebas exhaustivas y asegúrate de cubrir todos los casos.
 
 #### (0-2 Puntos) **Frontend y Estructuración**
 
-- [ ] **(0-1 Punto)** Diseño amigable y atractivo.
-- [ ] **(0-1 Punto)** Código del frontend organizado en módulos/archivos de forma clara.
+- [x] **(0-1 Punto)** Diseño amigable y atractivo.
+- [x] **(0-1 Punto)** Código del frontend organizado en módulos/archivos de forma clara.
 
 #### (0-4 Puntos) **Pruebas de la Aplicación**
 

@@ -1,9 +1,16 @@
 import mysql from 'mysql2/promise';
 import {
   USER_TABLE,
-  Posts_TABLE,
-  Comments_TABLE,
-  Votes_TABLE,
+  POSTS_TABLE,
+  COMMENTS_TABLE,
+  VOTES_TABLE,
+  ROLES_TABLE,
+  PERMISSIONS_TABLE,
+  ROLE_PERMISSIONS_TABLE,
+  DEFAULT_ROLE,
+  INSERT_USERS,
+  DEFAULT_PERMISSIONS,
+  DEFAULT_ROLE_PERMISSIONS,
 } from '../types/schema';
 
 export class Database {
@@ -25,17 +32,24 @@ export class Database {
   // Methods
   private initializeDBSchema = async () => {
     console.log('Initializing DB schema...');
+    await this.executeSQL(ROLES_TABLE);
     await this.executeSQL(USER_TABLE);
-    await this.executeSQL(Posts_TABLE);
-    await this.executeSQL(Comments_TABLE);
-    await this.executeSQL(Votes_TABLE);
+    await this.executeSQL(PERMISSIONS_TABLE);
+    await this.executeSQL(ROLE_PERMISSIONS_TABLE);
+    await this.executeSQL(POSTS_TABLE);
+    await this.executeSQL(COMMENTS_TABLE);
+    await this.executeSQL(VOTES_TABLE);
+    await this.executeSQL(DEFAULT_ROLE);
+    await this.executeSQL(INSERT_USERS);
+    await this.executeSQL(DEFAULT_PERMISSIONS);
+    await this.executeSQL(DEFAULT_ROLE_PERMISSIONS);
   };
 
-  public executeSQL = async (query: string, value?: any[]) => {
+  public executeSQL = async (query: string, values?: any[]) => {
     try {
       const conn = await this._pool.getConnection();
       try {
-        const [results] = await conn.query(query, value);
+        const [results] = await conn.query(query, values);
         return results;
       } finally {
         conn.release();

@@ -21,7 +21,7 @@ export class Database {
   constructor() {
     this._pool = mysql.createPool({
       database: process.env.DB_NAME || 'minitwitter',
-      host: process.env.DB_HOST || 'localhost',
+      host: process.env.DB_HOST || 'mariadb',
       user: process.env.DB_USER || 'minitwitter',
       password: process.env.DB_PASSWORD || 'supersecret123',
       connectionLimit: 5,
@@ -31,7 +31,6 @@ export class Database {
 
   // Methods
   private initializeDBSchema = async () => {
-    console.log('Initializing DB schema...');
     await this.executeSQL(ROLES_TABLE);
     await this.executeSQL(USER_TABLE);
     await this.executeSQL(PERMISSIONS_TABLE);
@@ -43,6 +42,7 @@ export class Database {
     await this.executeSQL(INSERT_USERS);
     await this.executeSQL(DEFAULT_PERMISSIONS);
     await this.executeSQL(DEFAULT_ROLE_PERMISSIONS);
+    console.log('Initializing DB schema...');
   };
 
   public executeSQL = async (query: string, values?: any[]) => {

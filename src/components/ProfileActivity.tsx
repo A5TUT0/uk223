@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { LeftSidebar } from './LeftSidebar';
-const API_URL = process.env.VITE_API_URL || 3000;
+const API_URL = process.env.VITE_API_URL || "http://backend:3000";
 
 interface Post {
     postId: number;

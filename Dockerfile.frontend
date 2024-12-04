@@ -1,0 +1,19 @@
+FROM node:18-alpine
+
+RUN apk add --no-cache curl bash
+
+RUN curl -fsSL https://bun.sh/install | bash
+
+ENV PATH="/root/.bun/bin:$PATH"
+
+WORKDIR /app
+
+COPY package.json bun.lockb tsconfig.json ./
+
+RUN bun install
+
+COPY . .
+
+EXPOSE 5173
+
+CMD ["bun", "run", "dev", "--host"]

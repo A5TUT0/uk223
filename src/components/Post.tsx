@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ThumbsDown, ThumbsUp } from 'lucide-react';
-const API_URL = process.env.VITE_API_URL || 3000;
+const API_URL = process.env.VITE_API_URL || "http://backend:3000";
 
 interface CommentType {
     id: number;

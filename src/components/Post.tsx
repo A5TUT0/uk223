@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ThumbsDown, ThumbsUp } from 'lucide-react';
+const API_URL = process.env.VITE_API_URL || 3000;
 
 interface CommentType {
     id: number;
@@ -51,7 +52,7 @@ export function Post({
 
     const fetchComments = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/comments/${id}`);
+            const response = await fetch(`${API_URL}/comments/${id}`);
             const data = await response.json();
             if (data.type === 'success') {
                 setComments(data.comments);
@@ -65,7 +66,7 @@ export function Post({
 
     const fetchVotes = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/posts/${id}/votes`);
+            const response = await fetch(`${API_URL}/posts/${id}/votes`);
             const data = await response.json();
             if (data.type === 'success') {
                 setLikes(data.likes);
@@ -81,7 +82,7 @@ export function Post({
 
     const handleVote = async (vote: 'like' | 'dislike' | null) => {
         try {
-            const response = await fetch(`http://localhost:3000/posts/${id}/vote`, {
+            const response = await fetch(`${API_URL}/posts/${id}/vote`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -104,7 +105,7 @@ export function Post({
         if (!newComment.trim()) return;
 
         try {
-            const response = await fetch('http://localhost:3000/comments', {
+            const response = await fetch(`${API_URL}/comments`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

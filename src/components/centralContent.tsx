@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { NewPost } from './NewPost';
 import { Post } from './Post';
 import axios from 'axios';
+const API_URL = process.env.VITE_API_URL || 3000;
 
 interface PostType {
     id: number;
@@ -44,7 +45,7 @@ export default function CentralContent() {
 
     const fetchPosts = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/posts');
+            const response = await axios.get(`${API_URL}/posts`);
             setPosts(response.data.posts);
         } catch (error) {
             console.error('[FETCH POSTS] Error:', error);
@@ -57,7 +58,7 @@ export default function CentralContent() {
 
         try {
             const response = await axios.post(
-                'http://localhost:3000/posts',
+                `${API_URL}/posts`,
                 { content },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -75,7 +76,7 @@ export default function CentralContent() {
         if (!token) return;
 
         try {
-            await axios.delete(`http://localhost:3000/posts/${id}`, {
+            await axios.delete(`${API_URL}/posts/${id}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setPosts(posts.filter((post) => post.id !== id));
@@ -90,7 +91,7 @@ export default function CentralContent() {
 
         try {
             const response = await axios.put(
-                `http://localhost:3000/posts/${id}`,
+                `${API_URL}/posts/${id}`,
                 { content: newContent },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

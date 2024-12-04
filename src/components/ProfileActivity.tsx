@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { LeftSidebar } from './LeftSidebar';
+const API_URL = process.env.VITE_API_URL || 3000;
 
 interface Post {
     postId: number;
@@ -34,7 +35,7 @@ export default function ProfileActivity() {
     const fetchUserActivity = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:3000/profile/activity', {
+            const response = await axios.get(`${API_URL}/profile/activity`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 

@@ -17,7 +17,7 @@ const Settings: React.FC = () => {
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
 
-    const API_URL = 'http://localhost:3000';
+    const API_URL = process.env.VITE_API_URL || 3000;
 
     const handleSaveUsername = async () => {
         try {

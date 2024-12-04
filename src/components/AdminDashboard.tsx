@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { LeftSidebar } from './LeftSidebar';
+const API_URL = process.env.VITE_API_URL || 3000;
 
 interface User {
     id: number;
@@ -25,7 +26,7 @@ export default function AdminDashboard() {
     const fetchUsers = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:3000/users', {
+            const response = await axios.get(`${API_URL}/users`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setUsers(response.data.users);
@@ -41,7 +42,7 @@ export default function AdminDashboard() {
         try {
             const token = localStorage.getItem('token');
             await axios.put(
-                'http://localhost:3000/users/block',
+                `${API_URL}/users/block`,
                 { userId, isBlocked },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -74,12 +75,10 @@ export default function AdminDashboard() {
 
     return (
         <div className="flex min-h-screen  text-[#FFFFFF]">
-            {/* Sidebar */}
             <div className="w-64 border-r border-[#4B5563]">
                 <LeftSidebar />
             </div>
 
-            {/* Main Content */}
             <div className="flex-1 p-6">
                 <h1 className="text-3xl font-bold mb-6 text-center md:text-left">Admin Dashboard</h1>
 

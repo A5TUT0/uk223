@@ -1,3 +1,3 @@
-import * as TUser from './user';
+import * as TUser from './user.js';
 
 export { TUser };

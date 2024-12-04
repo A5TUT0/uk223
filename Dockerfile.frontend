@@ -1,19 +1,31 @@
+# Utiliza una imagen base de Node.js
 FROM node:18-alpine
 
+# Instala dependencias del sistema necesarias
 RUN apk add --no-cache curl bash
 
+# Instala Bun usando el script oficial
 RUN curl -fsSL https://bun.sh/install | bash
 
-ENV PATH="/root/.bun/bin:$PATH"
+# Configura las variables de entorno para Bun
+ENV BUN_INSTALL=/root/.bun
+ENV PATH=$BUN_INSTALL/bin:$PATH
 
+# Establece el directorio de trabajo
 WORKDIR /app
 
-COPY package.json bun.lockb tsconfig.json ./
+# Copia los archivos de configuración
+COPY package.json ./
+COPY bun.lockb ./
 
+# Instala las dependencias usando Bun
 RUN bun install
 
+# Copia el resto del código de la aplicación
 COPY . .
 
+# Exponer el puerto en el que correrá el frontend
 EXPOSE 5173
 
-CMD ["bun", "run", "dev", "--host"]
+# Comando para iniciar el servidor en modo desarrollo
+CMD ["bun", "run", "dev"]

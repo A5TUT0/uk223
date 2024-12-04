@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ThumbsDown, ThumbsUp } from 'lucide-react';
-const API_URL = process.env.VITE_API_URL || "http://backend:3000";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 interface CommentType {
     id: number;
@@ -13,16 +13,17 @@ interface CommentType {
     userId: number;
 }
 
-interface PostProps {
+export interface PostProps {
     id: number;
     username: string;
     content: string;
     creationDate: string;
-    isOwner: boolean;
     userRole: string;
     currentUserId: number | null;
     onDelete: (id: number) => void;
     onEdit: (id: number, newContent: string) => void;
+    isOwner: boolean;
+    canModerate: boolean; // Agrega esta línea
 }
 
 export function Post({

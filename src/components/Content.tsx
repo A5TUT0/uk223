@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { NewPost } from './NewPost';
 import { Post } from './Post';
 import axios from 'axios';
-const API_URL = process.env.VITE_API_URL || "http://backend:3000";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 interface PostType {
     id: number;

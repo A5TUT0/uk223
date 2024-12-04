@@ -1,6 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { Database } from './db';
+import { Database } from './db.js';
+
+// Extend the Express Request interface
+declare global {
+  namespace Express {
+    interface Request {
+      user?: any;
+    }
+  }
+}
 
 const db = new Database();
 
@@ -19,14 +28,20 @@ export const authenticateToken = (
 
   const token = authHeader.split(' ')[1];
 
-  jwt.verify(token, process.env.TOKEN_SECRET || 'secret', (err, decoded) => {
-    if (err) {
-      return res.status(403).json({ type: 'error', message: 'Invalid token.' });
-    }
+  jwt.verify(
+    token,
+    process.env.TOKEN_SECRET || 'secret',
+    (err, decoded: any) => {
+      if (err) {
+        return res
+          .status(403)
+          .json({ type: 'error', message: 'Invalid token.' });
+      }
 
-    req.user = decoded;
-    next();
-  });
+      req.user = decoded;
+      next();
+    }
+  );
 };
 
 export const authorizeRole = (allowedRoles: string[]) => {
@@ -43,7 +58,6 @@ export const authorizeRole = (allowedRoles: string[]) => {
     next();
   };
 };
-
 export const authorizePermission = (requiredPermission: string) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.user?.id;

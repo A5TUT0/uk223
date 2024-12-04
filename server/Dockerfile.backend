@@ -1,19 +1,23 @@
-FROM node:18-alpine
+# Usa la imagen oficial de Bun
+FROM oven/bun:latest
 
-RUN apk add --no-cache curl bash
-
-RUN curl -fsSL https://bun.sh/install | bash
-
-ENV PATH="/root/.bun/bin:$PATH"
-
+# Establece el directorio de trabajo
 WORKDIR /app
 
-COPY package.json bun.lockb tsconfig.json ./
+# Copia los archivos de configuración
+COPY server/package.json server/bun.lockb ./
 
+# Instala las dependencias usando Bun
 RUN bun install
 
-COPY . .
+# Copia el resto del código de la aplicación
+COPY server/ .
 
+# Exponer el puerto en el que correrá el backend
 EXPOSE 3000
 
-CMD ["bun", "run", "index.ts"]
+# Establecer el entrypoint a bun
+ENTRYPOINT ["bun"]
+
+# Comando para iniciar el backend
+CMD ["index.ts"]

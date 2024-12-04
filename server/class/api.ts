@@ -1,8 +1,9 @@
-import { authenticateToken, authorizeRole } from './authMiddleware';
-import { UserController } from './user';
-import { PostController } from './PostController';
-import { CommentController } from './CommentController';
-import { Express, Request, Response } from 'express';
+import express, { Express, Request, Response } from 'express';
+import asyncHandler from 'express-async-handler';
+import { authenticateToken, authorizeRole } from './authMiddleware.js';
+import { UserController } from './user.js';
+import { PostController } from './PostController.js';
+import { CommentController } from './CommentController.js';
 
 export class API {
   private app: Express;

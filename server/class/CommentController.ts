@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Database } from './db';
+import { Database } from './db.js';
 
 export class CommentController {
   private db: Database;

@@ -1,57 +1,83 @@
-version: "3.9"
+version: '3.8'
 
 services:
   mariadb:
     image: mariadb:latest
+    container_name: mariadb
     volumes:
       - m223_project_mariadb:/var/lib/mysql
     restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=supersecret123
-      - MYSQL_DATABASE=minitwitter
-      - MYSQL_USER=minitwitter
-      - MYSQL_PASSWORD=supersecret123
+      MYSQL_ROOT_PASSWORD: supersecret123
+      MYSQL_DATABASE: minitwitter
+      MYSQL_USER: minitwitter
+      MYSQL_PASSWORD: supersecret123
     ports:
-      - "3306:3306"
+      - '3306:3306'
+    networks:
+      - m223_network
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
     depends_on:
       - mariadb
     restart: always
     environment:
-      - PMA_HOST=mariadb
-      - PMA_PORT=3306
-      - MYSQL_ROOT_PASSWORD=supersecret123
+      PMA_HOST: mariadb
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: supersecret123
     ports:
-      - "9200:80"
+      - '9200:80'
+    networks:
+      - m223_network
 
   backend:
     build:
-      context: ./server
+      context: .
       dockerfile: Dockerfile.backend
+    container_name: backend
+    restart: always
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DB_HOST: mariadb
+      DB_PORT: 3306
+      DB_NAME: minitwitter
+      DB_USER: minitwitter
+      DB_PASSWORD: supersecret123
+      TOKEN_SECRET: 'tu_token_secret'
     ports:
-      - "3000:3000"
+      - '3000:3000'
     depends_on:
       - mariadb
-    environment:
-      - DB_NAME=minitwitter
-      - DB_HOST=mariadb
-      - DB_USER=minitwitter
-      - DB_PASSWORD=supersecret123
-    command: ["bun", "run", "index.ts"]
+    volumes:
+      - ./server:/app
+    networks:
+      - m223_network
 
   frontend:
     build:
       context: .
       dockerfile: Dockerfile.frontend
+    container_name: frontend
+    restart: always
+    environment:
+      VITE_API_URL: http://backend:3000
     ports:
-      - "5173:5173"
+      - '5173:5173'
     depends_on:
       - backend
-    environment:
-      - VITE_BACKEND_URL=http://backend:3000
-    command: ["bun", "run", "dev", "--host"]
+    volumes:
+      - ./:/app
+    command: ['bun', 'run', 'dev']
+    networks:
+      - m223_network
 
 volumes:
   m223_project_mariadb:
+
+networks:
+  m223_network:
+    driver: bridge
